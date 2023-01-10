@@ -1,46 +1,43 @@
-Cristache Cristian-Valentin 321CD - Tema 3
+Cristache Cristian-Valentin 321CD
 
-Implementarea se bazeaza pe elemente de cod din laboratorul 10.
-Pentru crearea de JSON am folosit biblioteca cJSON, o biblioteca pe care
-am utilizat-o in trecut si la PC in anul 1 la tema 3.
-https://github.com/DaveGamble/cJSON
+For the creation of JSON we used the cJSON library.
 
-Important de mentionat e modul in care scriem un JSON. Prima oara cream un
-cJSON object cu functia cJSON_CreateObject(). Pentru a crea o intrare in JSON,
-folosim functia cJSON_AddItemToObject(object, "string", cJSON*), unde
-ultimul argument este dat de cJSON_CreateString() (lucram doar cu stringuri).
-La final trebuie sters obiectul initial cu cJSON_Delete(object).
+Important to mention is how we write a JSON. The first time I create a
+cJSON object with the cJSON_CreateObject() function. To create a JSON entry,
+we use the function cJSON_AddItemToObject(object, "string", cJSON*), where
+the last argument is given by cJSON_CreateString() (we only work with strings).
+At the end the initial object must be deleted with cJSON_Delete(object).
 
 
 request.c
-Aici se afla formatarea fiecarui request in parte: GET, POST si DELETE.
-Pentru fiecare exista cate o functie. Implementarile lor sunt aproape
-cele din laboratorul 10, cu exceptia adaugarii campului Authorization unde
-punem tokenul JWT (daca nu este NULL desigur). Doar functia DELETE este noua,
-insa se comporta exact la fel cu restul.
+Here is the formatting for each request: GET, POST and DELETE.
+For each there is a function. Their implementations are almost
+those in lab 10, except for adding the Authorization field where
+field we put the JWT token (if it is not NULL of course). Only the DELETE function is new,
+but it behaves exactly the same as the rest.
 
 helpers.c
-Fisier luat din laboratorul 10 unde sunt implementate functii precum:
-compute_message (adauga \r\n in mesaje), send_to_server,
+File taken from lab 10 where functions like:
+compute_message (add \r\n to messages), send_to_server,
 recieve_from_server etc.
 
 client.c
-Aici se afla programul principal care este practic un while(1)
-cu un mare if-else. Fiecare if se ocupa de cate o comanda care poate fi
-introdusa de la tastatura. Indiferent de comanda, pasii sunt similari:
+Here is the main program which is basically a while(1)
+with a big if-else. Each if deals with a command that can be
+entered from the keyboard. Regardless of the command, the steps are similar:
 
-1. Deschide conexiunea cu serverul.
-2. Preia comanda de la tastatura.
-3. Cere informatii suplimentare, daca e cazul. De exemplu la login trebuie 
-introdus si un user si o parola, iar la get_book trebuie introdus IDul cartii.
-4. Genereaza JSON cu datele de post in cazul in care requestul este POST.
-De exemplu la add_book, toate datele despre carte (title, author...) trebuie
-adaugate intr-un JSON.
-5. Genereaza mesajul folosind functiile din request 
-(compute_X_request, unde X e post, get sau delete) si trimite-l cu
-functia send_to_server.
-6. Primeste raspunsul de la server cu receive_from_server.
-7. Verifica codul din raspuns. Daca incepe cu 2 inseamna ca operatia a
-fost un succes si afisam un mesaj sugestiv. Altfel, afisam eroarea
-intoarsa de server.
-8. Inchidem conexiunea.
+1. Open the connection to the server.
+2. Take the command from the keyboard.
+3. Request additional information, if necessary. For example at login you must 
+a username and password must be entered, and the book ID must be entered at get_book.
+4. Generate JSON with the post data if the request is POST.
+For example in add_book, all book data (title, author...) must be
+added in a JSON.
+5. Generate the message using the functions in the request 
+functions (compute_X_request, where X is post, get or delete) and send it with
+send_to_server function.
+6. Receive the response from the server with receive_from_server.
+7. Check the code in the response. If it starts with 2 it means that the operation has
+was successful and displays a suggestive message. Otherwise, display the error
+returned by the server.
+8. Close the connection.
