@@ -1,0 +1,46 @@
+Cristache Cristian-Valentin 321CD - Tema 3
+
+Implementarea se bazeaza pe elemente de cod din laboratorul 10.
+Pentru crearea de JSON am folosit biblioteca cJSON, o biblioteca pe care
+am utilizat-o in trecut si la PC in anul 1 la tema 3.
+https://github.com/DaveGamble/cJSON
+
+Important de mentionat e modul in care scriem un JSON. Prima oara cream un
+cJSON object cu functia cJSON_CreateObject(). Pentru a crea o intrare in JSON,
+folosim functia cJSON_AddItemToObject(object, "string", cJSON*), unde
+ultimul argument este dat de cJSON_CreateString() (lucram doar cu stringuri).
+La final trebuie sters obiectul initial cu cJSON_Delete(object).
+
+
+request.c
+Aici se afla formatarea fiecarui request in parte: GET, POST si DELETE.
+Pentru fiecare exista cate o functie. Implementarile lor sunt aproape
+cele din laboratorul 10, cu exceptia adaugarii campului Authorization unde
+punem tokenul JWT (daca nu este NULL desigur). Doar functia DELETE este noua,
+insa se comporta exact la fel cu restul.
+
+helpers.c
+Fisier luat din laboratorul 10 unde sunt implementate functii precum:
+compute_message (adauga \r\n in mesaje), send_to_server,
+recieve_from_server etc.
+
+client.c
+Aici se afla programul principal care este practic un while(1)
+cu un mare if-else. Fiecare if se ocupa de cate o comanda care poate fi
+introdusa de la tastatura. Indiferent de comanda, pasii sunt similari:
+
+1. Deschide conexiunea cu serverul.
+2. Preia comanda de la tastatura.
+3. Cere informatii suplimentare, daca e cazul. De exemplu la login trebuie 
+introdus si un user si o parola, iar la get_book trebuie introdus IDul cartii.
+4. Genereaza JSON cu datele de post in cazul in care requestul este POST.
+De exemplu la add_book, toate datele despre carte (title, author...) trebuie
+adaugate intr-un JSON.
+5. Genereaza mesajul folosind functiile din request 
+(compute_X_request, unde X e post, get sau delete) si trimite-l cu
+functia send_to_server.
+6. Primeste raspunsul de la server cu receive_from_server.
+7. Verifica codul din raspuns. Daca incepe cu 2 inseamna ca operatia a
+fost un succes si afisam un mesaj sugestiv. Altfel, afisam eroarea
+intoarsa de server.
+8. Inchidem conexiunea.
